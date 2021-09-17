@@ -7,15 +7,3 @@ export const dateConverter = (timestamp) => {
     const year = new Date(timestamp * 1000).getFullYear()
     return [dayOfTheWeek, dayOfTheMonth, month, year]
 }
-
-// export const apiCall = () => {
-//     axios.get(`${process.env.REACT_APP_BASE_URL}weather?q=${query}&units=metric&appid=${process.env.REACT_APP_API_KEY}`)
-//         .then(function (response) {
-//             console.log(response)
-//         })
-//     // baseWeatherInfo(response)
-//     // setDate(dateConverter(response.data.dt))
-//     // }).catch(function (error) {
-//     //     setIsIncorrect(true)
-//     // })
-// }

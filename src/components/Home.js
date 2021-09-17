@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { apiCall } from '../utils/index'
-import axios from 'axios'
+import { getCurrentCityData, getDefaultCityData } from '../api/index'
 import Error from './Error'
 import Button from './Button'
 import Place from './Place'
 import Date from './Date'
 import Temperature from './Temperature'
+import Loader from './Loader'
 import { dateConverter } from '../utils/index'
 function Home() {
     const [query, setQuery] = useState('')
@@ -13,32 +13,32 @@ function Home() {
     const [countryName, setCountryName] = useState()
     const [isIncorrect, setIsIncorrect] = useState(false)
     const [currentTemp, setCurrentTemp] = useState()
+    const [description, setDescription] = useState('')
     const [date, setDate] = useState([])
 
-    const getWeatherData = () => {
-        // const result = apiCall(query)
-        // console.log(result)
-        axios.get(`${process.env.REACT_APP_BASE_URL}weather?q=${query}&units=metric&appid=${process.env.REACT_APP_API_KEY}`)
-            .then(function (response) {
-                baseWeatherInfo(response)
-                setDate(dateConverter(response.data.dt))
-            }).catch(function (error) {
-                setIsIncorrect(true)
-            })
-    }
     useEffect(() => {
-        axios.get(`https://api.openweathermap.org/data/2.5/weather?q=baku&&units=metric&appid=${process.env.REACT_APP_API_KEY}`)
-            .then(function (response) {
-                baseWeatherInfo(response)
-            })
+        getDefaultCityData().then(response =>
+            baseWeatherInfo(response)
+        )
     }, [])
 
+    const getWeatherData = () => {
+        getCurrentCityData(query).then(response => {
+            baseWeatherInfo(response)
+            setDate(dateConverter(response.data.dt))
+
+        }).catch(() =>
+            setIsIncorrect(true)
+        )
+        setQuery('')
+    }
     const baseWeatherInfo = (response) => {
         setCountryName(response.data.sys.country)
         setCityName(response.data.name)
         setIsIncorrect(false)
         setCurrentTemp(Math.floor(response.data.main.temp))
         setDate(dateConverter(response.data.dt))
+        setDescription((response.data.weather[0].description).toUpperCase())
     }
 
     return (
@@ -50,15 +50,17 @@ function Home() {
                     type="text"
                     placeholder="Enter the city"
                     onChange={e => setQuery(e.target.value)}
+                    value={query}
                 />
                 <Error isIncorrect={isIncorrect} />
                 <Button getWeatherData={getWeatherData} />
                 <Place cityName={cityName} countryName={countryName} />
                 <Date date={date} />
                 <Temperature currentTemp={currentTemp} />
+                <p className="mt-10 text-2xl text-white font-bold">{description}</p>
             </div>
         ) : (
-            <div>Loading...</div>
+            <Loader />
         )
 
 
