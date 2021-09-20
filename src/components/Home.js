@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, createContext } from 'react'
+import React from 'react'
 import { getCurrentCityData, getDefaultCityData } from '../api/index'
 import Error from './Error'
 import Button from './Button'
@@ -7,6 +8,8 @@ import Date from './Date'
 import Temperature from './Temperature'
 import Loader from './Loader'
 import { dateConverter } from '../utils/index'
+
+export const WeatherData = createContext('');
 function Home() {
     const [query, setQuery] = useState('')
     const [cityName, setCityName] = useState('')
@@ -15,6 +18,7 @@ function Home() {
     const [currentTemp, setCurrentTemp] = useState()
     const [description, setDescription] = useState('')
     const [date, setDate] = useState([])
+
 
     useEffect(() => {
         getDefaultCityData().then(response =>
@@ -52,11 +56,13 @@ function Home() {
                     onChange={e => setQuery(e.target.value)}
                     value={query}
                 />
-                <Error isIncorrect={isIncorrect} />
-                <Button getWeatherData={getWeatherData} />
-                <Place cityName={cityName} countryName={countryName} />
-                <Date date={date} />
-                <Temperature currentTemp={currentTemp} />
+                <WeatherData.Provider value={[isIncorrect, cityName, countryName]} >
+                    <Error />
+                    <Button getWeatherData={getWeatherData} />
+                    <Place />
+                    <Date date={date} />
+                    <Temperature currentTemp={currentTemp} />
+                </WeatherData.Provider>
                 <p className="mt-10 text-2xl text-white font-bold">{description}</p>
             </div>
         ) : (
