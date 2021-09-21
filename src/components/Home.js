@@ -49,7 +49,7 @@ function Home() {
         cityName.length > 0 ? (
             <div className="flex flex-col items-center">
                 <input
-                    className="bg-purple-100 bg-opacity-50 shadow-lg border rounded w-1/3 mt-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="bg-purple-100 bg-opacity-50 shadow-lg border rounded md:w-1/3 mt-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="city"
                     type="text"
                     placeholder="Enter the city"
