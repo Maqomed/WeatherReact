@@ -68,10 +68,6 @@ function Home() {
         ) : (
             <Loader />
         )
-
-
-
     )
 }
-
 export default Home

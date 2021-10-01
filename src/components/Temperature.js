@@ -5,5 +5,4 @@ function Temperature({ currentTemp }) {
         </div>
     )
 }
-
 export default Temperature
